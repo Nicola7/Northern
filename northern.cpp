@@ -8,11 +8,11 @@ double stormerZ(double R,double z,double y,double h);
 double stormerv(double R,double z,double v,double y,double h);
 double stormery(double R,double z,double v,double y,double h);
 int main (void){
-  double h=0.0001;
-  int n=(0.3)/h;
-  double Ri=0.257453;
-  double Zi=0.314687;
-  std::cout<<Ri<<'\t'<<Zi<<'\n';
+  std::cout<<std::fixed;std::setprecision(7);
+  std::cout<<"s"<<'\t'<<"R"<<'\t'<<"z"<<'\n';
+  double h=0.001;  int n=(0.3)/h;
+  double Ri=0.257453;  double Zi=0.314687;
+  std::cout<<"0"<<'\t'<<Ri<<'\t'<<Zi<<'\n';
   double ri=std::hypot(Ri,Zi);
   double Qi=(((-1)/Ri)+(Ri/(std::pow(ri,3))));
   Qi*=Qi;Qi=1-Qi;
@@ -20,17 +20,17 @@ int main (void){
   double Zpi=((std::sqrt(Qi))*(std::sin((5*(M_PI))/4)));
   double R=stormerR(Ri,Zi,Rpi,h);
   double Z=stormerZ(Ri,Zi,Zpi,h);
-  std::cout<<R<<'\t'<<Z<<'\n';
+  std::cout<<h<<'\t'<<R<<'\t'<<Z<<'\n';
   double v=stormerv(Ri,Zi,Rpi,Zpi,h);
   double y=stormery(Ri,Zi,Rpi,Zpi,h);
-  for (int ii=2;ii<(n+2);++ii){
+  for (int ii=0;ii<=(n-2);++ii){
     double r,z,u,i;
     r=R;    z=Z;    u=v;    i=y;
     R=stormerR(r,z,u,h);
     Z=stormerZ(r,z,u,h);
     v=stormerv(r,z,u,i,h);
     y=stormery(r,z,u,i,h);
-    std::cout<<R<<'\t'<<Z<<'\n';
+    std::cout<<h*(ii+2)<<'\t'<<R<<'\t'<<Z<<'\n';
   }
   return 0;
 }
