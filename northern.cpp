@@ -8,7 +8,8 @@ double stormerZ(double R,double z,double y,double h);
 double stormerv(double R,double z,double v,double y,double h);
 double stormery(double R,double z,double v,double y,double h);
 int main (void){
-  const double h=0.1;
+  double h=0.0001;
+  int n=(0.3)/h;
   double Ri=0.257453;
   double Zi=0.314687;
   std::cout<<Ri<<'\t'<<Zi<<'\n';
@@ -22,13 +23,13 @@ int main (void){
   std::cout<<R<<'\t'<<Z<<'\n';
   double v=stormerv(Ri,Zi,Rpi,Zpi,h);
   double y=stormery(Ri,Zi,Rpi,Zpi,h);
-  for (int ii=0;ii<2;++ii){
+  for (int ii=2;ii<(n+2);++ii){
     double r,z,u,i;
     r=R;    z=Z;    u=v;    i=y;
     R=stormerR(r,z,u,h);
     Z=stormerZ(r,z,u,h);
-    v=stormerv(r,z,u,v,h);
-    y=stormery(r,z,u,v,h);
+    v=stormerv(r,z,u,i,h);
+    y=stormery(r,z,u,i,h);
     std::cout<<R<<'\t'<<Z<<'\n';
   }
   return 0;
@@ -54,14 +55,14 @@ double stormerR(double R,double z,double v,double h){
 }
 double stormerZ(double R,double z,double y,double h){
   double n=((((SDZ(R,z))*(h*0.5))+y)*h);
-  n+=R;
+  n+=z;
   return n;
 
 }
 double stormerv(double R,double z,double v,double y,double h){
   double n=stormerR(R,z,v,h);
   double t=stormerZ(R,z,y,h);
-  n=((SDR(n,z))*(h*0.5));
+  n=((SDR(n,t))*(h*0.5));
   n+=((h*0.5)*(SDR(R,z)));
   n+=v;
   return n;
@@ -69,7 +70,7 @@ double stormerv(double R,double z,double v,double y,double h){
 double stormery(double R,double z,double v,double y,double h){
   double n=stormerR(R,z,v,h);
   double t=stormerZ(R,z,y,h);
-  n=((SDZ(n,z))*(h*0.5));
+  n=((SDZ(n,t))*(h*0.5));
   n+=((h*0.5)*(SDZ(R,z)));
   n+=y;
   return n;
