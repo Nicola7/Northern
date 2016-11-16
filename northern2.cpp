@@ -12,31 +12,38 @@ double stormerZ(double R,double z,double y,double h);
 double stormerv(double R,double z,double v,double y,double h);
 double stormery(double R,double z,double v,double y,double h);
 double phiprima (double R, double z);
-double rungekutta(double R,double z,double h);
+double rungekutta(double Rb,double zb,double Rm,double zm,double Ra,double za,double h); 
 int main (void){
   std::cout<<std::fixed;std::setprecision(7);
-  std::cout<<"s"<<'\t'<<"R"<<'\t'<<"z"<<'\n';
-  double h=0.001;  int n=(0.3)/h;
+  std::cout<<"s"<<'\t'<<'\t'<<"R"<<'\t'<<'\t'<<"z"<<'\t'<<'\t'<<"phi"<<'\n';
+  double h=0.001;  int n=(0.3)/h; double w=(2*h);
   double Ri=0.257453;  double Zi=0.314687;
-  std::cout<<"0"<<'\t'<<Ri<<'\t'<<Zi<<'\n';
+  std::cout<<"0"<<'\t'<<'\t'<<Ri<<'\t'<<Zi<<'\t'<<"0"<<'\n';
   double ri=rinicial(Ri,Zi);
   double Qi=Qinicial(Ri,ri);
   double Rpi=Rpinicial(Qi);
   double Zpi=Zpinicial(Qi);
   double R=stormerR(Ri,Zi,Rpi,h);
   double Z=stormerZ(Ri,Zi,Zpi,h);
-  std::cout<<h<<'\t'<<R<<'\t'<<Z<<'\n';
   double v=stormerv(Ri,Zi,Rpi,Zpi,h);
   double y=stormery(Ri,Zi,Rpi,Zpi,h);
   /*todo lo que este arriba de este comentario es para calcular el valor de las condiciones iniciales y el "for" es para calcular los valores de la serie*/
   for (int ii=0;ii<=(n-2);++ii){
-    double r,z,u,i;
+    double r,z,u,i,uu,kk;
+    uu=r; kk=z;
     r=R;    z=Z;    u=v;    i=y;
     R=stormerR(r,z,u,h);
     Z=stormerZ(r,z,u,h);
     v=stormerv(r,z,u,i,h);
     y=stormery(r,z,u,i,h);
-    std::cout<<h*(ii+2)<<'\t'<<R<<'\t'<<Z<<'\n';
+    if (ii==0){
+      double phi=rungekutta(Ri,Zi,r,z,R,Z,w);
+      std::cout<<h*(ii+2)<<'\t'<<R<<'\t'<<Z<<'\t'<<phi<<'\n';
+    }
+    if (ii%2==0 && ii!=0){
+      double phi=rungekutta(uu,kk,r,z,R,Z,w);
+      std::cout<<h*(ii+2)<<'\t'<<R<<'\t'<<Z<<'\t'<<phi<<'\n';
+    }
   }
   return 0;
 }
@@ -107,11 +114,11 @@ double phiprima (double R, double z){
   t=(1/R)*(((-1)/R)+(R/t));
   return t;
 }
-double rungekutta(double R,double z,double h){
-  double k1=phiprima(R,z);
-  double k2=phiprima(R+(h/2),z+(h/2));
-  double k3=phiprima(R+(h/2),z+(h/2));
-  double k4=phiprima(R+h,z+h);
+double rungekutta(double Rb,double zb,double Rm,double zm,double Ra,double za,double h){
+  double k1=phiprima(Rb,zb);
+  double k2=phiprima(Rm,zm);
+  double k3=phiprima(Rm,zm);
+  double k4=phiprima(Ra,za);
   double y=k1+((h/6)*(k1+(2*k2)+(2*k3)+k4));
   return y;
 }
