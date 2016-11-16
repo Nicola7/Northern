@@ -11,6 +11,8 @@ double stormerR(double R,double z,double v,double h);
 double stormerZ(double R,double z,double y,double h);
 double stormerv(double R,double z,double v,double y,double h);
 double stormery(double R,double z,double v,double y,double h);
+double phiprima (double R, double z);
+double rungekutta(double R,double z,double h);
 int main (void){
   std::cout<<std::fixed;std::setprecision(7);
   std::cout<<"s"<<'\t'<<"R"<<'\t'<<"z"<<'\n';
@@ -98,4 +100,18 @@ double stormery(double R,double z,double v,double y,double h){
   n+=((h*0.5)*(SDZ(R,z)));
   n+=y;
   return n;
+}
+double phiprima (double R, double z){
+  double t=std::hypot(R,z);
+  t=std::pow(t,3);
+  t=(1/R)*(((-1)/R)+(R/t));
+  return t;
+}
+double rungekutta(double R,double z,double h){
+  double k1=phiprima(R,z);
+  double k2=phiprima(R+(h/2),z+(h/2));
+  double k3=phiprima(R+(h/2),z+(h/2));
+  double k4=phiprima(R+h,z+h);
+  double y=k1+((h/6)*(k1+(2*k2)+(2*k3)+k4));
+  return y;
 }
